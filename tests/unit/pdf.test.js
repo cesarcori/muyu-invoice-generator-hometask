@@ -73,4 +73,41 @@ describe('generatePDF', () => {
 
     expect(mockDoc.text).toHaveBeenCalledWith('Line 1\nLine 2');
   });
+
+  test('should handle missing company_details', async () => {
+    const invoice = {
+      id: 1,
+      created_at: new Date(),
+      company_name: 'Test Co',
+      company_details: null,
+      items: [],
+      subtotal: 0,
+      tax_rate: 0,
+      total: 0,
+    };
+
+    mockDoc.on.mockImplementation((event, callback) => {
+      if (event === 'end') callback();
+      return mockDoc;
+    });
+
+    await generatePDF(invoice);
+
+    expect(mockDoc.text).toHaveBeenCalledWith('');
+  });
+
+  test('should cover logger error and warn methods', () => {
+    const { logger } = require('../../src/services/logger');
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    
+    logger.error('test error');
+    logger.warn('test warn');
+    
+    expect(errorSpy).toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalled();
+    
+    errorSpy.mockRestore();
+    warnSpy.mockRestore();
+  });
 });

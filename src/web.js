@@ -140,8 +140,8 @@ async function start() {
   }
 }
 
+/* istanbul ignore next */
 if (require.main === module) {
-  /* istanbul ignore next */
   start();
 }
 

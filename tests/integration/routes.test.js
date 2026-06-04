@@ -121,6 +121,20 @@ describe('API Routes', () => {
       expect(response.status).toBe(200);
       expect(getInvoicesByOwner).toHaveBeenCalledWith(email);
     });
+
+    test('should return 500 if database fails', async () => {
+      const { getInvoicesByOwner } = require('../../src/services/db');
+      getInvoicesByOwner.mockRejectedValue(new Error('DB Error'));
+      const errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+
+      const response = await request(app)
+        .get('/past-invoices')
+        .set('Cookie', ['user_email=test@test.com']);
+      
+      expect(response.status).toBe(500);
+      expect(errorSpy).toHaveBeenCalled();
+      errorSpy.mockRestore();
+    });
   });
 
   describe('GET /download/:id', () => {
@@ -158,6 +172,41 @@ describe('API Routes', () => {
       
       expect(response.status).toBe(200);
       expect(response.header['content-type']).toBe('application/pdf');
+    });
+
+    test('should return 500 if download fails', async () => {
+      const { getInvoiceById } = require('../../src/services/db');
+      getInvoiceById.mockRejectedValue(new Error('DB Error'));
+      const errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+
+      const response = await request(app)
+        .get('/download/1')
+        .set('Cookie', ['user_email=owner@test.com']);
+      
+      expect(response.status).toBe(500);
+      expect(errorSpy).toHaveBeenCalled();
+      errorSpy.mockRestore();
+    });
+  });
+
+  describe('POST /generate errors', () => {
+    test('should return 500 if PDF generation fails', async () => {
+      saveInvoice.mockResolvedValue({ id: 1, company_name: 'Test', items: [] });
+      generatePDF.mockRejectedValue(new Error('PDF Error'));
+      const errorSpy = jest.spyOn(logger, 'error').mockImplementation(() => {});
+
+      const response = await request(app)
+        .post('/generate')
+        .type('form')
+        .send({
+          companyName: 'Test Co',
+          'expenses[0][description]': 'Item 1',
+          'expenses[0][cost]': '100'
+        });
+
+      expect(response.status).toBe(500);
+      expect(errorSpy).toHaveBeenCalled();
+      errorSpy.mockRestore();
     });
   });
 });
