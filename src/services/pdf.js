@@ -19,7 +19,7 @@ function generatePDF(invoice) {
     // Company Info
     doc.fontSize(14).text('FROM:', { underline: true });
     doc.fontSize(12).text(invoice.company_name);
-    doc.fontSize(10).text(invoice.company_details);
+    doc.fontSize(10).text(invoice.company_details ? invoice.company_details.replace(/\r/g, '') : '');
     doc.moveDown();
 
     // Table Header

@@ -25,6 +25,7 @@ function calculateInvoice(expenses, taxRate) {
     subtotal: parseFloat(subtotal.toFixed(2)),
     taxAmount: parseFloat(taxAmount.toFixed(2)),
     total: parseFloat(total.toFixed(2)),
+    taxRate: rate,
     items: items.map(i => ({ ...i, cost: parseFloat(parseFloat(i.cost || 0).toFixed(2)) }))
   };
 }

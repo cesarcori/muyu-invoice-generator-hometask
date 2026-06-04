@@ -12,6 +12,7 @@ describe('calculateInvoice', () => {
     expect(result.subtotal).toBe(150);
     expect(result.taxAmount).toBe(15);
     expect(result.total).toBe(165);
+    expect(result.taxRate).toBe(10);
     expect(result.items).toHaveLength(2);
     expect(result.items[0].cost).toBe(100);
   });

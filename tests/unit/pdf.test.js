@@ -51,4 +51,26 @@ describe('generatePDF', () => {
     expect(mockDoc.text).toHaveBeenCalledWith('Test Co');
     expect(mockDoc.end).toHaveBeenCalled();
   });
+
+  test('should normalize newlines in company_details', async () => {
+    const invoice = {
+      id: 1,
+      created_at: new Date(),
+      company_name: 'Test Co',
+      company_details: 'Line 1\r\nLine 2',
+      items: [],
+      subtotal: 0,
+      tax_rate: 0,
+      total: 0,
+    };
+
+    mockDoc.on.mockImplementation((event, callback) => {
+      if (event === 'end') callback();
+      return mockDoc;
+    });
+
+    await generatePDF(invoice);
+
+    expect(mockDoc.text).toHaveBeenCalledWith('Line 1\nLine 2');
+  });
 });
