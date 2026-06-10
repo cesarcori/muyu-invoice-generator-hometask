@@ -13,6 +13,7 @@ Before running the application, ensure you have the following tools installed:
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js
+- **Tooling**: Biome (Linter/Formatter)
 - **Templating**: EJS
 - **Frontend Interactivity**: Alpine.js (Lightweight reactive state)
 - **Styling**: Tailwind CSS (Pre-compiled)
@@ -57,6 +58,13 @@ npm run dev
 The project enforces high code coverage (>80%) for all backend logic and routes using Jest:
 ```bash
 npm test
+```
+
+### Linting & Formatting
+The project uses Biome for blazing-fast, zero-config linting and code formatting:
+```bash
+mise run lint    # Check for linting errors and formatting issues
+mise run format  # Automatically fix linting errors and format code
 ```
 
 ### Security Scanning

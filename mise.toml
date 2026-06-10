@@ -14,6 +14,14 @@ run = "npm install && npm start"
 description = "Run all tests and generate coverage report"
 run = "npm test"
 
+[tasks.lint]
+description = "Check for linting errors and formatting issues using Biome"
+run = "npm run lint"
+
+[tasks.format]
+description = "Automatically fix linting errors and format code using Biome"
+run = "npm run format"
+
 [tasks.scan-dependencies]
 description = "Scan dependencies for vulnerabilities using Trivy"
 run = "trivy fs ."
